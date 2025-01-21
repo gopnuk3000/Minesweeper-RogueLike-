@@ -1,5 +1,7 @@
 import random
 import pygame
+import os
+import sys
 
 CELL_SIZE = 30
 MINE = 10
@@ -13,6 +15,14 @@ GREY = (200, 200, 200)
 # экран
 size = 500, 500
 screen = pygame.display.set_mode(size)
+
+def load_image(name, colorkey=None):
+    fullname = os.path.join('image', name)
+    if not os.path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
+    image = pygame.image.load(fullname)
+    return image
 
 class Board:
     def __init__(self, width, height):
@@ -28,7 +38,7 @@ class Board:
                 if self.board[y][x] == CLOSED:
                     color = GREY
                 elif self.board[y][x] == MINE:
-                    color = RED
+                    color = GREY
                 else:
                     color = WHITE
 
@@ -63,6 +73,8 @@ class Minesweeper(Board):
 
             if mines_count == 0:
                 self._open_neighbours(x, y)
+            elif self.board[y][x] == MINE:
+                print(self.board[y][x])
 
     def _count_mines(self, x, y):
         count = 0

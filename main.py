@@ -1,6 +1,7 @@
 import random
 import pygame
-from config.GameBoard import Minesweeper, CELL_SIZE, WHITE, screen, size
+from config.GameBoard import Minesweeper, CELL_SIZE, WHITE, screen, MINE
+from config.StartGame import startGame
 
 if __name__ == '__main__':
     pygame.init()
@@ -9,6 +10,8 @@ if __name__ == '__main__':
 
     clock = pygame.time.Clock()
     running = True
+
+    startGame()
 
     while running:
         for event in pygame.event.get():
@@ -21,6 +24,9 @@ if __name__ == '__main__':
                 cell_y = y // CELL_SIZE
                 if 0 <= cell_x < width and 0 <= cell_y < height:
                     game.open_cell(cell_x, cell_y)
+
+                    if game.board[cell_y][cell_x] == MINE:
+                        running = False
         screen.fill(WHITE)
         game.draw()
         pygame.display.flip()
