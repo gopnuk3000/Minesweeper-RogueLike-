@@ -4,10 +4,10 @@ import pygame
 from config.GameBoard import Minesweeper, CELL_SIZE, WHITE, screen, MINE
 from config.ScreenGame import startGame, endGame, levelComplite
 
-SCOREGAME, LEVEL, WIN = 0,1,True
+SCOREGAME, LEVEL, WIN = 0, 1, True
 
-def Gamelevel(game):
-    global SCOREGAME,LEVEL,WIN
+
+def Gamelevel(game, SCOREGAME, LEVEL):
     winLevel = False
     clock = pygame.time.Clock()
     running = True
@@ -59,28 +59,34 @@ def Gamelevel(game):
 
     pygame.time.delay(900)
 
-    return winLevel
+    return winLevel, SCOREGAME
+
 
 if __name__ == '__main__':
     pygame.init()
-    width, height = 4, 4
-    _mins = random.randint(1, 2)
+    running = True
+    while running:
+        SCOREGAME, LEVEL, WIN = 0, 1, True
+        width, height = 4, 4
+        _mins = random.randint(1, 2)
 
-    startGame()
+        startGame()
+        for _ in range(5):
+            config = [random.randint(1, 2), random.randint(1, 2), random.randint(2, 3)]
+            width += config[0]
+            height += config[1]
+            _mins += config[2]
 
-    for _ in range(5):
-        config = [random.randint(1,2), random.randint(1,2), random.randint(2,3)]
-        width += config[0]
-        height += config[1]
-        _mins += config[2]
+            game = Minesweeper(width, height, _mins)
+            level, score = Gamelevel(game, SCOREGAME, LEVEL)
+            if not level:
+                WIN = False
+                SCOREGAME += score
+                break
+            levelComplite()
+            LEVEL += 1
+            SCOREGAME += score
 
-        game = Minesweeper(width, height, _mins)
-        level = Gamelevel(game)
-        if not level:
-            WIN = False
-            break
-        levelComplite()
-        LEVEL += 1
-
-    endGame(SCOREGAME, LEVEL, WIN)
+        endGame(SCOREGAME, LEVEL, WIN)
     pygame.quit()
+    sys.exit()
