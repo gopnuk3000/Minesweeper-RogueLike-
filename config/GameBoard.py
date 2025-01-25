@@ -33,12 +33,16 @@ class Board:
         self.width = width
         self.height = height
         self.board = [[CLOSED for _ in range(width)] for _ in range(height)]
-        pygame.display.set_mode((width * CELL_SIZE, height * CELL_SIZE))
+        pygame.display.set_mode((width * CELL_SIZE, height * CELL_SIZE+90))
+
+    @property
+    def getSize(self):
+        return pygame.display.get_window_size()
 
     def draw(self):
         for y in range(self.height):
             for x in range(self.width):
-                rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+                rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE+90, CELL_SIZE, CELL_SIZE)
 
                 if self.board[y][x] == CLOSED:
                     color = GREY
@@ -55,10 +59,10 @@ class Board:
                 if self.board[y][x] not in [CLOSED, MINE, MINE_OPEN, FLAG_MINE] and self.board[y][x] > 0:
                     font = pygame.font.Font(None, 36)
                     text = font.render(str(self.board[y][x]), True, BLACK)
-                    screen.blit(text, (x * CELL_SIZE + 10, y * CELL_SIZE + 5))
+                    screen.blit(text, (x * CELL_SIZE + 10, y * CELL_SIZE + 95))
                 elif self.board[y][x] in [FLAG_MINE[1]] and self.board[y][x] > 0:
                     fon = pygame.transform.scale(load_image('flag.jpg'), (CELL_SIZE, CELL_SIZE))
-                    screen.blit(fon, (x * CELL_SIZE + 10, y * CELL_SIZE + 5))
+                    screen.blit(fon, (x * CELL_SIZE + 10, y * CELL_SIZE + 95))
 
 
 class Minesweeper(Board):
@@ -80,6 +84,7 @@ class Minesweeper(Board):
         if self.board[y][x] == CLOSED:
             mines_count = self._count_mines(x, y)
             self.board[y][x] = mines_count
+
 
             if mines_count == 0:
                 self._open_neighbours(x, y)
@@ -117,3 +122,10 @@ class Minesweeper(Board):
             for x in range(self.width):
                 if self.board[y][x] == MINE or self.board[y][x] == FLAG_MINE[0]:
                     self.board[y][x] = MINE_OPEN  # Убедимся, что мины останутся помеченными
+
+    def check_win(self):
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.board[y][x] != MINE and self.board[y][x] == CLOSED:
+                    return False
+        return True

@@ -2,15 +2,13 @@ import random
 import sys
 import pygame
 from config.GameBoard import Minesweeper, CELL_SIZE, WHITE, screen, MINE
-from config.ScreenGame import startGame, endGame
+from config.ScreenGame import startGame, endGame, levelComplite
 
-if __name__ == '__main__':
-    pygame.init()
-    width, height = 10, 10
+SCOREGAME, LEVEL, WIN = 0,1,True
 
-    startGame()
-    game = Minesweeper(width, height, random.randint(10, 16))
-
+def Gamelevel(game):
+    global SCOREGAME,LEVEL,WIN
+    winLevel = False
     clock = pygame.time.Clock()
     running = True
 
@@ -23,26 +21,66 @@ if __name__ == '__main__':
                 if event.button == pygame.BUTTON_LEFT:
                     x, y = event.pos
                     cell_x = x // CELL_SIZE
-                    cell_y = y // CELL_SIZE
+                    cell_y = (y // CELL_SIZE) - 3
                     if 0 <= cell_x < width and 0 <= cell_y < height:
+                        if game.board[cell_y][cell_x] == -1:
+                            SCOREGAME += random.randint(5, 10)
                         game.open_cell(cell_x, cell_y)
 
                         if game.board[cell_y][cell_x] == MINE:
                             game._reveal_all_mines()
                             running = False
+                            continue
+
                 elif event.button == pygame.BUTTON_RIGHT:
                     x, y = event.pos
                     cell_x = x // CELL_SIZE
-                    cell_y = y // CELL_SIZE
+                    cell_y = (y // CELL_SIZE) - 3
                     if 0 <= cell_x < width and 0 <= cell_y < height:
                         game.open_flag_cell(cell_x, cell_y)
         screen.fill(WHITE)
+
+        if game.check_win():
+            game._reveal_all_mines()
+            running = False
+            winLevel = True
+
         game.draw()
+
+        font = pygame.font.Font(None, 36)
+        text = font.render(f"Очки: {SCOREGAME}", True, 'black')
+        screen.blit(text, (15, 20))
+
+        text = font.render(f"Уровень: {LEVEL}", True, 'black')
+        screen.blit(text, (15, 50))
         pygame.display.flip()
 
         clock.tick(60)
 
     pygame.time.delay(900)
 
-    endGame()
+    return winLevel
+
+if __name__ == '__main__':
+    pygame.init()
+    width, height = 4, 4
+    _mins = random.randint(1, 2)
+
+    startGame()
+
+    for _ in range(5):
+        config = [random.randint(1,2), random.randint(1,2), random.randint(2,3)]
+        width += config[0]
+        height += config[1]
+        _mins += config[2]
+
+        game = Minesweeper(width, height, _mins)
+        level = Gamelevel(game)
+        if not level:
+            WIN = False
+            break
+        levelComplite()
+        LEVEL += 1
+
+    endGame(SCOREGAME, LEVEL, WIN)
     pygame.quit()
