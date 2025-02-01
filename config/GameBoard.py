@@ -3,12 +3,16 @@ import pygame
 import os
 import sys
 from gamechanges.GoldFlag import GoldFlag
+from gamechanges.QuizMine import QuizMine
 
 CELL_SIZE = 30
 MINE = 10
 MINE_OPEN = 20
 FLAG_MINE = (10, 15)
 CLOSED = -1
+QUIZES = {
+    '2 * 2': '4'
+}
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -138,3 +142,7 @@ class Minesweeper(Board):
                 Minesweeper.open_cell(self, x, y)
             else:
                 Minesweeper.open_flag_cell(self, x, y)
+
+    def quiz_safe(self, x, y, quizes, answer):
+        if Minesweeper._is_mine(self, x, y):
+            QuizMine(quizes).used(self, random.randint(0, len(quizes)), answer)
