@@ -2,6 +2,7 @@ import random
 import pygame
 import os
 import sys
+from gamechanges.GoldFlag import GoldFlag
 
 CELL_SIZE = 30
 MINE = 10
@@ -129,3 +130,11 @@ class Minesweeper(Board):
                 if self.board[y][x] != MINE and self.board[y][x] == CLOSED:
                     return False
         return True
+        
+    def gold_open(self, x, y):
+        a = GoldFlag(self.width, self.height).used(x, y)
+        for x, y in a:
+            if self.board[x][y] != MINE:
+                Minesweeper.open_cell(self, x, y)
+            else:
+                Minesweeper.open_flag_cell(self, x, y)
