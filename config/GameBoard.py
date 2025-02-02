@@ -7,6 +7,7 @@ from config.gamechanges.GoldFlag import GoldFlag
 from config.GameSprites import MineImage, BoomImage
 from config.gamechanges.QuizMine import QuizMine
 
+# константы для удобства
 CELL_SIZE = 30
 MINE = 10
 MINE_OPEN = 20
@@ -23,6 +24,7 @@ size = 10 * CELL_SIZE, 10 * CELL_SIZE
 screen = pygame.display.set_mode(size)
 
 
+# загрузка изображений
 def load_image(name, colorkey=None):
     fullname = os.path.join('image', name)
     if not os.path.isfile(fullname):
@@ -33,7 +35,7 @@ def load_image(name, colorkey=None):
 
 group_bomb = pygame.sprite.Group()
 
-
+# поле игры: зарисовка поля в зависимости от того, какое оно: пустое, мина, флаг и т.д.
 class Board:
     def __init__(self, width, height):
         self.width = width
@@ -42,13 +44,16 @@ class Board:
         self.flags = [[False for _ in range(width)] for _ in range(height)]
         pygame.display.set_mode((width * CELL_SIZE, height * CELL_SIZE+120))
 
+    # взять текущее разрешение экрана
     @property
     def getSize(self):
         return pygame.display.get_window_size()
 
+    # установить разрешение экрана
     def set_size(self, x, y):
         screen = pygame.display.set_mode((x,y))
 
+    # рисовка поля
     def draw(self):
         for y in range(self.height):
             for x in range(self.width):
@@ -80,12 +85,14 @@ class Board:
                     pygame.draw.rect(screen, color, rect)
 
 
+# класс сапера: мины, открытие клеток и т.д.
 class Minesweeper(Board):
     def __init__(self, width, height, num_mines):
         super().__init__(width, height)
         self.num_mines = num_mines
         self._place_mines()
 
+    # расположение мин
     def _place_mines(self):
         count = 0
         while count < self.num_mines:
@@ -95,6 +102,7 @@ class Minesweeper(Board):
                 self.board[y][x] = MINE
                 count += 1
 
+    # открытие ячейки если закрыта и нету на нем флага
     def open_cell(self, x, y):
         if self.board[y][x] == CLOSED and not self.flags[y][x]:
             mines_count = self._count_mines(x, y)
@@ -104,9 +112,11 @@ class Minesweeper(Board):
             if mines_count == 0:
                 self._open_neighbours(x, y)
 
+    # установка флага
     def set_flags(self, x, y):
         self.flags[y][x] = not self.flags[y][x]
 
+    # счетчик мин
     def _count_mines(self, x, y):
         count = 0
         for dy in [-1, 0, 1]:
@@ -119,6 +129,7 @@ class Minesweeper(Board):
                         count += 1
         return count
 
+    # открытие соседних мин и если на них нету флага
     def _open_neighbours(self, x, y):
         for dy in [-1, 0, 1]:
             for dx in [-1, 0, 1]:
@@ -129,15 +140,18 @@ class Minesweeper(Board):
                     if self.board[ny][nx] == CLOSED and not self.flags[ny][nx]:
                         self.open_cell(nx, ny)
 
+    # проверка на мину
     def _is_mine(self, x, y):
         return self.board[y][x] == MINE
 
+    # открытие всех мин
     def _reveal_all_mines(self):
         for y in range(self.height):
             for x in range(self.width):
                 if self.board[y][x] == MINE:
                     self.board[y][x] = MINE_OPEN  # Убедимся, что мины останутся помеченными
 
+    # проверка на победу
     def check_win(self):
         for y in range(self.height):
             for x in range(self.width):
@@ -152,7 +166,3 @@ class Minesweeper(Board):
                 Minesweeper.open_cell(x, y)
             else:
                 Minesweeper.set_flags(x, y)
-
-    # def quiz_safe(self, x, y, quizes, answer):
-    #     if Minesweeper._is_mine(self, x, y):
-    #         QuizMine(quizes).used(self, random.randint(0, len(quizes)), answer)

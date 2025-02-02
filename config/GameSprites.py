@@ -9,7 +9,7 @@ def load_image(name, colorkey=None):
     image = pygame.image.load(fullname)
     return image
 
-
+# спрайт мины
 class MineImage(pygame.sprite.Sprite):
     bomb_image = load_image('bomb.png')
     boom_image = load_image('boom.png')
@@ -24,6 +24,7 @@ class MineImage(pygame.sprite.Sprite):
     def update(self):
         self.image = self.bomb_image
 
+# спрайт взрыва
 class BoomImage(pygame.sprite.Sprite):
     boom_image = load_image('boom.png')
 
@@ -37,7 +38,7 @@ class BoomImage(pygame.sprite.Sprite):
     def update(self):
         self.image = self.boom_image
 
-
+# спрайт флага: потом
 class FlagImage(pygame.sprite.Sprite):
     flag_image = load_image('flag.jpg')
 
