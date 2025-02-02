@@ -5,9 +5,11 @@ from config.GameBoard import Minesweeper, CELL_SIZE, WHITE, screen, MINE
 from config.ScreenGame import startGame, endGame, levelComplite, quizScreen
 from config.GameSprites import MineImage
 
+# очки, уровень, победа или нет
 SCOREGAME, LEVEL, WIN = 0, 1, True
 
 
+# функция уровня
 def Gamelevel(game, SCOREGAME, LEVEL, cntFlags):
     global screen
 
@@ -22,6 +24,7 @@ def Gamelevel(game, SCOREGAME, LEVEL, cntFlags):
             if event.type == pygame.QUIT:
                 sys.exit()
 
+            # октрытия ячейки или установка флага
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == pygame.BUTTON_LEFT:
                     x, y = event.pos
@@ -62,6 +65,8 @@ def Gamelevel(game, SCOREGAME, LEVEL, cntFlags):
                                 game.set_flags(cell_x, cell_y)
                         else:
                             cntFlag -= 1
+
+        # прорисовка
         screen.fill(WHITE)
 
         if game.check_win():
@@ -69,8 +74,10 @@ def Gamelevel(game, SCOREGAME, LEVEL, cntFlags):
             running = False
             winLevel = True
 
+        # отрисовка поля
         game.draw()
 
+        # установка текста в игре
         font = pygame.font.Font(None, 36)
         text = font.render(f"Очки: {SCOREGAME}", True, 'black')
         screen.blit(text, (15, 20))
@@ -84,11 +91,13 @@ def Gamelevel(game, SCOREGAME, LEVEL, cntFlags):
         pygame.display.flip()
         clock.tick(60)
 
+    # задержка перед окончанием игры
     pygame.time.delay(900)
 
     return winLevel, SCOREGAME
 
 
+# начало
 if __name__ == '__main__':
     pygame.init()
     running = True
@@ -97,23 +106,29 @@ if __name__ == '__main__':
         width, height = 4, 4
         _mins = random.randint(1, 2)
 
+        # заставка
         startGame()
+        # 5 уровней: проходим - победа, иначе пройгрыш
         for _ in range(5):
+            # генерация уровня: его усложнение
             config = [random.randint(1, 2), random.randint(1, 2), random.randint(2, 3)]
             width += config[0]
             height += config[1]
             _mins += config[2]
 
             game = Minesweeper(width, height, _mins)
+            # генерация уровня: начало уровня
             level, score = Gamelevel(game, SCOREGAME, LEVEL, _mins)
             if not level:
                 WIN = False
                 SCOREGAME += score
                 break
+            # генерация уровня: прошли уровень
             levelComplite()
             LEVEL += 1
             SCOREGAME += score
 
+        # заставка конечная
         endGame(SCOREGAME, LEVEL, WIN)
     pygame.quit()
     sys.exit()

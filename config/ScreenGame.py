@@ -4,13 +4,15 @@ import pygame
 import json
 from config.GameBoard import load_image
 
-
+# начало игры
 def startGame():
+    # текст
     intro_text = ["Сапер рогалик", "",
                   "Открывайте клетки, и не попадитесь на мины",
                   "с каждым уровнем все сложнее и сложнее,",
                   "Удачи!"]
 
+    # рисовка фона, текста
     screen = pygame.display.set_mode((500, 400))
     fon = pygame.transform.scale(load_image('fon.png'), (500, 400))
     screen.blit(fon, (0, 0))
@@ -19,6 +21,8 @@ def startGame():
     for line in intro_text:
         string_rendered = font.render(line, 1, pygame.Color('white'))
         intro_rect = string_rendered.get_rect()
+
+        # отступы
         text_coord += 10
         intro_rect.top = text_coord
         intro_rect.x = 10
@@ -27,6 +31,7 @@ def startGame():
 
     clock = pygame.time.Clock()
 
+    # цикл заставки: по нажатию мывши или клавиатуры выходим
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -37,7 +42,7 @@ def startGame():
         pygame.display.flip()
         clock.tick(60)
 
-
+# Конец игры: разная в зависимости от выйграша или пройгрыша
 def endGame(SCOREGAME, LEVEL, WIN):
     if not WIN:
         intro_text = ["Конец игры", "",
@@ -48,6 +53,7 @@ def endGame(SCOREGAME, LEVEL, WIN):
                       "Ты выйграл!", "",
                       f"Ваши очки: {SCOREGAME}", f"Уровень комнаты: {LEVEL}"]
 
+    # аналогично что в заставке начала игры
     screen = pygame.display.set_mode((300, 300))
     fon = pygame.transform.scale(load_image('fon.png'), (300, 300))
     screen.blit(fon, (0, 0))
@@ -74,7 +80,7 @@ def endGame(SCOREGAME, LEVEL, WIN):
         pygame.display.flip()
         clock.tick(60)
 
-
+# уровень был пройден
 def levelComplite():
     intro_text = ["Уровень пройден!"]
 
@@ -104,11 +110,12 @@ def levelComplite():
         pygame.display.flip()
         clock.tick(60)
 
+# экран квиза: всплывают ответы на вопрос и сам вопрос
 def quizScreen(lvl: str):
     with open('data/quiz.json', 'r', encoding='utf-8') as F:
         QUIZ: dict = json.load(F)
 
-    # id = random.randint(0, len(QUIZ[lvl].items()))
+    # рандомный квиз из файла
     data_quiz = QUIZ[lvl]
     data_quest_random = [t for t in data_quiz.values()]
     data_quiz_correct = [r for r in random.choice(data_quest_random).values()]
@@ -135,6 +142,7 @@ def quizScreen(lvl: str):
 
     clock = pygame.time.Clock()
 
+    # цикл в котором пишем ответ на клавиатуре: правильный ответ - True, иначе False
     input_text = ""
     while True:
         for event in pygame.event.get():
