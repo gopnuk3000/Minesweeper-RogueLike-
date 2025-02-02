@@ -114,28 +114,44 @@ def quizScreen(lvl: str):
     data_quiz_correct = [r for r in random.choice(data_quest_random).values()]
     quiz_question_answer = data_quiz_correct[0], data_quiz_correct[1], data_quiz_correct[2]
 
-    intro_text = [f"{quiz_question_answer[0]}",""," - ".join(quiz_question_answer[1]), "Выберите правильный ответ"]
+    intro_text = [f"{quiz_question_answer[0]}","",f"{quiz_question_answer[1][0]}", f"{quiz_question_answer[1][1]}", f"{quiz_question_answer[1][2]}", f"{quiz_question_answer[1][3]}", "", "Введите правильный ответ"]
 
-    screen = pygame.display.set_mode((350, 350))
+    screen = pygame.display.set_mode((950, 380))
     font = pygame.font.Font(None, 30)
     text_coord = 50
+    question_rect = []
+    screen.fill((0, 0, 0))
     for line in intro_text:
         string_rendered = font.render(line, 1, pygame.Color('white'))
+        if line in quiz_question_answer[1]:
+            question_rect.append(line)
         intro_rect = string_rendered.get_rect()
         text_coord += 10
         intro_rect.top = text_coord
         intro_rect.x = 10
         text_coord += intro_rect.height
         screen.blit(string_rendered, intro_rect)
+    pygame.display.flip()
 
     clock = pygame.time.Clock()
 
+    input_text = ""
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-            elif event.type == pygame.KEYDOWN or \
-                    event.type == pygame.MOUSEBUTTONDOWN:
-                return
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE:
+                    input_text = input_text[:-1]  # Удаление последнего символа
+                elif event.key == pygame.K_RETURN:
+                    if quiz_question_answer[2].lower() == input_text.lower():
+                        return True
+                    else:
+                        return False
+                else:
+                    input_text += event.unicode  # Добавление нового символа
+        screen.fill((255,255,255), (0, 330, 950, 450))
+        text_surface = font.render(input_text, 1, (0,0,0))
+        screen.blit(text_surface, (10, 340))
         pygame.display.flip()
         clock.tick(60)
