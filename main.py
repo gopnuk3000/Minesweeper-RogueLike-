@@ -2,13 +2,15 @@ import random
 import sys
 import pygame
 from config.GameBoard import Minesweeper, CELL_SIZE, WHITE, screen, MINE
-from config.ScreenGame import startGame, endGame, levelComplite
+from config.ScreenGame import startGame, endGame, levelComplite, quizScreen
+from config.GameSprites import MineImage
 
 SCOREGAME, LEVEL, WIN = 0, 1, True
 
 
 def Gamelevel(game, SCOREGAME, LEVEL):
     winLevel = False
+    save_quiz = True
     clock = pygame.time.Clock()
     running = True
 
@@ -28,9 +30,11 @@ def Gamelevel(game, SCOREGAME, LEVEL):
                         game.open_cell(cell_x, cell_y)
 
                         if game.board[cell_y][cell_x] == MINE:
+                            if save_quiz:
+                                quizScreen('easy')
+                                continue
                             game._reveal_all_mines()
                             running = False
-                            continue
 
                 elif event.button == pygame.BUTTON_RIGHT:
                     x, y = event.pos

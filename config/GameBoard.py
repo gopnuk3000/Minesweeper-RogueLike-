@@ -1,18 +1,17 @@
+import json
 import random
 import pygame
 import os
 import sys
-from gamechanges.GoldFlag import GoldFlag
-from gamechanges.QuizMine import QuizMine
+from config.gamechanges.GoldFlag import GoldFlag
+from config.GameSprites import MineImage, BoomImage
+from config.gamechanges.QuizMine import QuizMine
 
 CELL_SIZE = 30
 MINE = 10
 MINE_OPEN = 20
 FLAG_MINE = (10, 15)
 CLOSED = -1
-QUIZES = {
-    '2 * 2': '4'
-}
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -31,6 +30,8 @@ def load_image(name, colorkey=None):
         sys.exit()
     image = pygame.image.load(fullname)
     return image
+
+group_bomb = pygame.sprite.Group()
 
 
 class Board:
@@ -65,6 +66,10 @@ class Board:
                     font = pygame.font.Font(None, 36)
                     text = font.render(str(self.board[y][x]), True, BLACK)
                     screen.blit(text, (x * CELL_SIZE + 10, y * CELL_SIZE + 95))
+                elif self.board[y][x] in [MINE_OPEN]:
+                    img_bomb = MineImage.bomb_image
+                    img_bomb = pygame.transform.scale(img_bomb, (34, 34))
+                    screen.blit(img_bomb, (x * CELL_SIZE, y * CELL_SIZE + 87))
                 elif self.board[y][x] in [FLAG_MINE[1]] and self.board[y][x] > 0:
                     fon = pygame.transform.scale(load_image('flag.jpg'), (CELL_SIZE, CELL_SIZE))
                     screen.blit(fon, (x * CELL_SIZE + 10, y * CELL_SIZE + 95))
@@ -143,6 +148,6 @@ class Minesweeper(Board):
             else:
                 Minesweeper.open_flag_cell(self, x, y)
 
-    def quiz_safe(self, x, y, quizes, answer):
-        if Minesweeper._is_mine(self, x, y):
-            QuizMine(quizes).used(self, random.randint(0, len(quizes)), answer)
+    # def quiz_safe(self, x, y, quizes, answer):
+    #     if Minesweeper._is_mine(self, x, y):
+    #         QuizMine(quizes).used(self, random.randint(0, len(quizes)), answer)
