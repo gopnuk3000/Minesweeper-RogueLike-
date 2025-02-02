@@ -18,6 +18,7 @@ def Gamelevel(game, SCOREGAME, LEVEL, cntFlags):
     save_quiz = True
     clock = pygame.time.Clock()
     running = True
+    chance = 1
 
     while running:
         for event in pygame.event.get():
@@ -32,9 +33,19 @@ def Gamelevel(game, SCOREGAME, LEVEL, cntFlags):
                     cell_y = (y // CELL_SIZE) - 4
                     if 0 <= cell_x < width and 0 <= cell_y < height:
                         if game.board[cell_y][cell_x] == -1 and not game.flags[cell_y][cell_x]:
+                            if chance > random.randint(0, 100):
+                                size_past = game.getSize
+                                bool_quest = quizScreen('easy')
+                                game.set_size(size_past[0], size_past[1])
+                                if bool_quest:
+                                    SCOREGAME += random.randint(5, 10)
+                                    continue
+                                else:
+                                    game.draw()
+                                    game._reveal_all_mines()
+                                    running = False
                             SCOREGAME += random.randint(5, 10)
                         game.open_cell(cell_x, cell_y)
-
                         if game.board[cell_y][cell_x] == MINE:
                             if save_quiz:
                                 size_past = game.getSize
