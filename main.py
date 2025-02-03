@@ -7,7 +7,7 @@ from config.GameSprites import MineImage
 
 # очки, уровень, победа или нет
 SCOREGAME, LEVEL, WIN = 0, 1, True
-
+save_quiz = True
 
 # функция уровня
 def Gamelevel(game, SCOREGAME, LEVEL, cntFlags):
@@ -15,7 +15,6 @@ def Gamelevel(game, SCOREGAME, LEVEL, cntFlags):
 
     cntFlag = 0
     winLevel = False
-    save_quiz = True
     clock = pygame.time.Clock()
     running = True
     chance = 1
@@ -114,7 +113,7 @@ if __name__ == '__main__':
     running = True
     while running:
         SCOREGAME, LEVEL, WIN = 0, 1, True
-        width, height = 4, 4
+        width, height = 12, 12
         _mins = random.randint(1, 2)
 
         # заставка
@@ -123,8 +122,8 @@ if __name__ == '__main__':
         for _ in range(5):
             # генерация уровня: его усложнение
             config = [random.randint(1, 2), random.randint(1, 2), random.randint(2, 3)]
-            width += config[0]
-            height += config[1]
+            width -= config[0]
+            height -= config[1]
             _mins += config[2]
 
             game = Minesweeper(width, height, _mins)
