@@ -4,8 +4,7 @@ import pygame
 import os
 import sys
 from config.gamechanges.GoldFlag import GoldFlag
-from config.GameSprites import MineImage, BoomImage
-from config.gamechanges.QuizMine import QuizMine
+from config.GameSprites import FlagImage, GoldFlagImage, MineImage
 
 # константы для удобства
 CELL_SIZE = 30
@@ -81,7 +80,9 @@ class Board:
                     if not self.flags[y][x]:
                         color = GREY
                     else:
-                        color = pygame.color.Color('yellow')
+                        img_flag = FlagImage.flag_image
+                        img_flag = pygame.transform.scale(img_flag, (30, 30))
+                        screen.blit(img_flag, (x * CELL_SIZE, y * CELL_SIZE + 115))
                     pygame.draw.rect(screen, color, rect)
 
 
