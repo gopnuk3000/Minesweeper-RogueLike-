@@ -7,7 +7,7 @@ from config.GameSprites import MineImage
 
 # очки, уровень, победа или нет
 SCOREGAME, LEVEL, WIN = 0, 1, True
-
+save_quiz = True
 
 # функция уровня
 def Gamelevel(game, SCOREGAME, LEVEL, cntFlags):
@@ -15,7 +15,6 @@ def Gamelevel(game, SCOREGAME, LEVEL, cntFlags):
 
     cntFlag = 0
     winLevel = False
-    save_quiz = True
     clock = pygame.time.Clock()
     running = True
     chance = 1
