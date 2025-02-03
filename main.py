@@ -11,7 +11,7 @@ save_quiz = True
 
 # функция уровня
 def Gamelevel(game, SCOREGAME, LEVEL, cntFlags):
-    global screen
+    global screen, save_quiz
 
     cntFlag = 0
     winLevel = False
