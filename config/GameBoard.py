@@ -79,11 +79,11 @@ class Board:
                 elif self.flags[y][x]:
                     if not self.flags[y][x]:
                         color = GREY
+                        pygame.draw.rect(screen, color, rect)
                     else:
                         img_flag = FlagImage.flag_image
-                        img_flag = pygame.transform.scale(img_flag, (30, 30))
+                        img_flag = pygame.transform.scale(img_flag, (30, 33))
                         screen.blit(img_flag, (x * CELL_SIZE, y * CELL_SIZE + 115))
-                    pygame.draw.rect(screen, color, rect)
 
 
 # класс сапера: мины, открытие клеток и т.д.

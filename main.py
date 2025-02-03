@@ -113,7 +113,7 @@ if __name__ == '__main__':
     running = True
     while running:
         SCOREGAME, LEVEL, WIN = 0, 1, True
-        width, height = 4, 4
+        width, height = 12, 12
         _mins = random.randint(1, 2)
 
         # заставка
@@ -122,8 +122,8 @@ if __name__ == '__main__':
         for _ in range(5):
             # генерация уровня: его усложнение
             config = [random.randint(1, 2), random.randint(1, 2), random.randint(2, 3)]
-            width += config[0]
-            height += config[1]
+            width -= config[0]
+            height -= config[1]
             _mins += config[2]
 
             game = Minesweeper(width, height, _mins)
