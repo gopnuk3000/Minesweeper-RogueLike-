@@ -1,3 +1,4 @@
+import os.path
 import random
 import sys
 import pygame
@@ -47,15 +48,15 @@ def endGame(SCOREGAME, LEVEL, WIN):
     if not WIN:
         intro_text = ["Конец игры", "",
                       "Вы проиграли!", "",
-                      f"Ваши очки: {SCOREGAME}", f"Уровень комнаты: {LEVEL}"]
+                      f"Ваши очки: {SCOREGAME}", f"Уровень комнаты: {LEVEL}", 'Ваш прогресс сохранен на рабочий стол']
     else:
         intro_text = ["Конец игры", "",
                       "Ты выйграл!", "",
-                      f"Ваши очки: {SCOREGAME}", f"Уровень комнаты: {LEVEL}"]
+                      f"Ваши очки: {SCOREGAME}", f"Уровень комнаты: {LEVEL}", 'Ваш прогресс сохранен на рабочий стол']
 
     # аналогично что в заставке начала игры
-    screen = pygame.display.set_mode((300, 300))
-    fon = pygame.transform.scale(load_image('fon.png'), (300, 300))
+    screen = pygame.display.set_mode((500, 300))
+    fon = pygame.transform.scale(load_image('fon.png'), (500, 300))
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 30)
     text_coord = 50
@@ -67,6 +68,10 @@ def endGame(SCOREGAME, LEVEL, WIN):
         intro_rect.x = 10
         text_coord += intro_rect.height
         screen.blit(string_rendered, intro_rect)
+
+    with open(f'{os.path.expanduser("~")}/Desktop/result.txt', 'w', encoding='utf-8') as F:
+        text = f"""Статистка игры\n==================\nУровень: {LEVEL};\nОчки: {SCOREGAME};\n==================\nПродолжайте развиваться!"""
+        F.write(text)
 
     clock = pygame.time.Clock()
 
