@@ -34,7 +34,7 @@ def Gamelevel(game, SCOREGAME, LEVEL, cntFlags):
                         if game.board[cell_y][cell_x] == -1 and not game.flags[cell_y][cell_x]:
                             if chance > random.randint(0, 100):
                                 size_past = game.getSize
-                                bool_quest = quizScreen('easy')
+                                bool_quest = quizScreen(random.choice(['easy', 'medium', 'hard']))
                                 game.set_size(size_past[0], size_past[1])
                                 if bool_quest:
                                     SCOREGAME += random.randint(5, 10)
